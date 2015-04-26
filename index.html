@@ -1,0 +1,386 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/style.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.4.1/d3.min.js"></script>
+    </head>
+    <body>
+
+        <div class="container-fluid">
+            <div id="main" class="row">
+                <div id="svgContainer" class="col-md-8">
+                </div>
+                <div id="detailView" class="col-md-4">
+                    <div id="controls">
+                        <p>
+                            <form class="form-horizontal">
+                            <fieldset>
+
+                            <h3>Filters</h3>
+
+                            <!-- Checkboxes -->
+                            <div class="form-group">
+                              <label class="col-md-4 control-label" for="gender">Gender</label>
+                              <div class="col-md-4">
+                              <div class="checkbox">
+                                <label for="gender-female">
+                                  <input type="checkbox" name="gender" id="gender-male" value="">
+                                  Male
+                                </label>
+                                </div>
+                              <div class="checkbox">
+                                <label for="gender-male">
+                                  <input type="checkbox" name="gender" id="gender-female" value="">
+                                  Female
+                                </label>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="form-group">
+                              <label class="col-md-4 control-label" for="bill">Supported Bill</label>
+                              <div class="col-md-4">
+                              <div class="checkbox">
+                                <label for="bil-yes">
+                                  <input type="checkbox" name="billAffiliate" id="bill-yes" value="">
+                                  Yes
+                                </label>
+                                </div>
+                              <div class="checkbox">
+                                <label for="bill-no">
+                                  <input type="checkbox" name="billAffiliate" id="bill-no" value="">
+                                  No
+                                </label>
+                                </div>
+                              </div>
+                            </div>
+
+                            </fieldset>
+                            </form>
+                        </p>
+                    </div>
+                    <div id="map">
+                        <h3>Map</h3>
+                        <p>This is where the map goes.</p>
+                    </div>
+                    <div id="info">
+                        <h3>Info</h3>
+                        <p>
+                            <span id="senatorName"></span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+			
+        	// Parameters
+            //------------------------------------------------------------------------
+        	var margin = {top: 20, right: 10, bottom: 20, left: 30},
+        		width = 760 - margin.left - margin.right,
+        		height = 680 - margin.top - margin.bottom,
+        		center = { x: width / 2.0, 
+        				   y: 240 },
+        		radius = { maximum: 350, ring1: 170, ring2: 210, ring3: 250 },
+        		rBigNode = 50,
+        		rSmallNode = 10,
+        		rImage = rBigNode * 0.75,
+                originNonEndorsing = { x:0, y:500 },
+                dimensionsNonEndorsing = { width: width, height: 140},
+                nRows = 4,     // Number of rows
+                nCols = 20;    // Number of nodes in a row
+
+        	var imgURL_Hillary = "img/hillary.jpg";
+
+        	// SVG Elements
+            //------------------------------------------------------------------------
+			var svg = d3.select("#svgContainer").append("svg")
+			    .attr("width", width + margin.left + margin.right)
+			    .attr("height", height + margin.top + margin.bottom)
+			  .append("g")
+			    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+			var defs = svg.append("defs");
+
+            var nonEndorsingNodes = svg.append("g").attr("class", "grid")
+                .attr("transform", "translate(" + originNonEndorsing.x + "," + originNonEndorsing.y + ")");
+
+        	// Hillary Node
+            //------------------------------------------------------------------------
+        	var hillary = svg.append("g")
+        		.attr("class", "hillary")
+        		.attr("transform", "translate(" + center.x + "," + center.y + ")");
+
+        	var endorsingNodes = hillary.append("g")
+        		.attr("class", "rays");
+
+        	var hillaryOuterCircle = hillary.append("circle")
+        		.attr("class", "outer")
+        		.attr("r", rBigNode);
+
+        	var hillaryInnerCircle = hillary.append("circle")
+        		.attr("class", "inner")
+        	  	.attr("r", rImage);
+
+        	addCircleBackground(hillaryInnerCircle, "portrait_Hillary", imgURL_Hillary);
+
+        	// Load senator data
+            //------------------------------------------------------------------------
+            var senators;
+        	d3.json("senators.json", function(err,data) {
+        		if (err) {
+        			alert("Error: Could not load data.");
+        		}
+        		senators = data.senators;
+
+                // sort senators by reelection year
+                senators.sort(function(a,b) {
+                    return a.reElectionYear - b.reElectionYear;
+                });
+
+        		// The initial display
+        		update(senators, false);
+        	});
+
+            // Checkbox stuff
+            //------------------------------------------------------------------------
+            d3.selectAll("input[type=checkbox]").on("change", function(d) {
+                // Collect filters
+                var filterFemale = document.getElementById("gender-female").checked;
+                var filterMale = document.getElementById("gender-male").checked;
+                var filterBillYes = document.getElementById("bill-yes").checked;
+                var filterBillNo = document.getElementById("bill-no").checked;
+
+                if (filterFemale && filterMale) { // Show both
+                    filterFemale = false;
+                    filterMale = false;
+                }
+
+                if (filterBillYes && filterBillNo) { // Show both
+                    filterBillYes = false;
+                    filterBillNo = false;
+                }
+
+                console.log(filterFemale);
+
+                // Filter senators 
+                var filtered = senators.filter(function(d) {
+                    var show = true;
+                    if (filterFemale) {
+                        show = show && d.isFemale;
+                    } 
+                    if (filterMale) {
+                        show = show && !d.isFemale;
+                    } 
+                    if (filterBillYes) {
+                        show = show && d.isBillAffiliate;
+                    }
+                    if (filterBillNo) {
+                        show = show && !d.isBillAffiliate;
+                    }
+                    return show;
+                });
+
+                // Update
+                update(filtered, true);
+            });
+
+        	// Functions
+        	//------------------------------------------------------------------------
+        	function update(data, animate) {
+
+                // Endorsing senators
+                // ------------------
+                updateEndorsing(data.filter(function(d) { return d.isEndorsing }), animate);
+        		
+                // Non-endorsing senators
+                // ----------------------
+                updateNonEndorsing(data.filter(function(d) { return !d.isEndorsing }), animate);
+        	}
+
+            function updateEndorsing(data, animate) {
+                var keys = data.map(function(d) { return d.id; });
+
+                var rScale = d3.scale.ordinal()
+                    .domain(keys)
+                    .range(data.map(function(d) {
+                        if (d.reElectionYear == 2017) {
+                            return radius.ring1;
+                        } else if (d.reElectionYear == 2019) {
+                            return radius.ring2;
+                        } else if (d.reElectionYear == 2021) {
+                            return radius.ring3;
+                        } else {
+                            console.log(d.reElectionYear);
+                            return radius.maximum;
+                        }
+                     }));
+
+                var angle = d3.scale.ordinal()
+                    .domain(keys)
+                    .rangeBands([0, 360]);
+
+                // DATA JOIN
+                var rays = endorsingNodes.selectAll(".ray")
+                    .data(data, function(d) { return d.id; });
+
+                // ENTER: Create new elements as needed and make them visible
+                var enter = rays.enter().append("g")
+                    .attr("class", "ray");
+                enter.append("line") // Creates line from hillary to circle
+                    .attr("x1", rBigNode)
+                    .attr("x2", function(d) { return rScale(d.id) });
+                
+                // arrange rays circularly
+                enter.attr("transform", function(d) { return "rotate(" + -angle(d.id) + ")"; });
+                
+                // Add event listener for mouseover
+                enter.each(function (d,i) {
+                    d3.select(this).on("mouseover", function() {
+                        d3.select("#senatorName").html(d.name);
+                    });
+                });
+
+                var senatorCircles = enter.append("g") // Add containers for individual senators
+                    .attr("class", function(d, i) { return "senator " + d.party; } )
+                    .attr("transform", function(d, i) { return "translate(" + rScale(d.id) + ",0)"} );
+                
+                senatorCircles.append("circle") // Add outer circles for individual senators
+                    .attr("class", "outer")
+                    .attr("r", rSmallNode);
+                
+                senatorCircles.append("circle") // Add inner circles for individual senators 
+                    .attr("class", "inner")
+                    .attr("r", 0)
+                    .attr("transform", function(d, i) { return "rotate(" + angle(d.id) + ")"; }); // Rotate the pictures backwards such that they're level
+
+                senatorCircles.each(function(d,i) {
+                    // Add Picture to each senator
+                    var innerCircle = d3.select(this).select(".inner");
+                    addCircleBackground(innerCircle, "portrait_" + d.id, d.img);
+                });
+
+                senatorCircles.on("click", makeBigOrSmall); // Add event listener for click
+
+                //UPDATE: Set current elements to visible
+                rays.transition().duration(animate?500:0).style("opacity", 1.0);
+
+                // EXIT: Set opactity to low for elements that are in exit set
+                rays.exit().transition().duration(animate?500:0).style("opacity", 0.2);
+            }
+
+            function updateNonEndorsing(data, animate) {
+                keys = data.map(function(d) { return d.id; });
+
+                var xScale = d3.scale.ordinal()
+                    .domain(keys)
+                    .range(keys.map(function(d,i) {
+                        var col = i % nCols;
+                        return col * dimensionsNonEndorsing.width / nCols;
+                    }));
+
+                var yScale = d3.scale.ordinal()
+                    .domain(keys)
+                    .range(keys.map(function(d,i) { 
+                        var row = Math.floor(i / nCols);
+                        return dimensionsNonEndorsing.height - row * dimensionsNonEndorsing.height / nRows;
+                    }));
+
+                // DATA JOIN
+                var areas = nonEndorsingNodes.selectAll(".area")
+                    .data(data, function(d) { return d.id; });
+
+                // ENTER: Create new elements as needed and make them visible
+                var enter = areas.enter().append("g")
+                    .attr("class", "area");
+
+                // Arrange areas linearly
+                enter.attr("transform", function(d) { return "translate(" + xScale(d.id) + ", " + yScale(d.id) + " )"; });
+
+                // Add event listener for mouseover
+                enter.each(function (d,i) {
+                    d3.select(this).on("mouseover", function() {
+                        d3.select("#senatorName").html(d.name);
+                    });
+                });
+
+                // Add container, inner & outer circles
+                senatorCircles = enter.append("g")
+                    .attr("class", function(d, i) { return "senator " + d.party; } );
+                senatorCircles.append("circle")
+                    .attr("class", "outer")
+                    .attr("r", rSmallNode);
+                senatorCircles.append("cirlce")
+                    .attr("class", "inner")
+                    .attr("r", 0);
+
+                senatorCircles.each(function(d,i) {
+                    // Add Picture to each senator
+                    var innerCircle = d3.select(this).select(".inner");
+                    addCircleBackground(innerCircle, "portrait_" + d.id, d.img);
+                });
+
+                senatorCircles.on("click", makeBigOrSmall); // Add event listener for click
+
+                //UPDATE: Set current elements to visible
+                areas.transition().duration(animate?500:0).style("opacity", 1.0);
+
+                // EXIT: Set opactity to low for elements that are in exit set
+                areas.exit().transition().duration(animate?500:0).style("opacity", 0.2);
+            }
+
+        	// adds image from url to circle. Id is unique identifier connecting the image
+        	function addCircleBackground(circle, id, url) {
+	        	defs.append("pattern")
+	        		.attr("id", id)
+	        		.attr("x", -rImage)
+	        		.attr("y", -rImage)
+	        	  	.attr("height", 2*rImage)
+	        		.attr("width", 2*rImage)
+	        		.attr("patternUnits", "userSpaceOnUse")
+	        	  .append("image")
+	        	  	.attr("x", 0)
+	        	  	.attr("y", 0)
+	        	  	.attr("height", 2*rImage)
+	        		.attr("width", 2*rImage)
+	        	  	.attr("xlink:href", url);
+
+	        	circle.style("fill", "url(#" + id + ")");
+        	}
+
+        	// make slave node big or small
+        	function makeBigOrSmall(d,i) {
+	        		var innerCircle = d3.select(this).select(".inner");
+	        		var outerCircle = d3.select(this).select(".outer");
+	        		var isClosed = innerCircle.attr("r") == 0;
+
+                    // Close currently open circle, if any
+                    var openCircle = d3.select(".isOpen");
+                    if (openCircle) {
+                        openCircle.select(".inner").transition().attr("r", 0);
+                        openCircle.select(".outer").transition().attr("r", rSmallNode);
+                        openCircle.classed("isOpen", false);
+                    }
+
+	        		if (isClosed) {
+	        			innerCircle.transition().attr("r", rImage);
+	        			outerCircle.transition().attr("r", rBigNode);
+                        d3.select(this).classed("isOpen", true);
+	        		} else {
+	        			innerCircle.transition().attr("r", 0);
+	        			outerCircle.transition().attr("r", rSmallNode);
+	        		}
+	        	}
+
+		</script>
+
+    </body>
+</html>

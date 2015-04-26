@@ -1,0 +1,26 @@
+/* SVG PARAMS */
+
+.hillary .outer {
+	fill: MediumBlue;
+}
+.senator .outer, .senator .inner {
+	fill: #228B22;
+	cursor: pointer;
+}
+.senator.Democratic .outer, .senator.democrat .inner {
+    fill: MediumBlue;
+}
+.senator.Republican .outer, .senator.republican .inner {
+    fill: Crimson;
+}
+.rays line {
+	fill: none;
+	stroke: #999;
+	stroke-width: 0.75;
+}
+
+/* HTML LAYOUT */
+
+body { 
+    background-color: #fefefe;
+}
