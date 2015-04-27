@@ -19,6 +19,13 @@
 .senator.Republican circle {
     fill: Crimson;
 }
+.senator circle.hoverarea, .senator.Democratic circle.hoverarea, .senator.Republican circle.hoverarea {
+	fill: rgba(0,0,0,0);
+}
+.senator:hover circle.hoverarea {
+	stroke: #aaa;
+	fill: #fefefe;
+}
 
 /* HTML LAYOUT */
 

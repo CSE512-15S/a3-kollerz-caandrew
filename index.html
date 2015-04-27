@@ -137,7 +137,7 @@
                 .attr("class", "inner")
                 .attr("r", rImage);
 
-            var defsHillary = svg.append("defs");
+            var defsMain = svg.append("defs");
             var defsSenatorPortrait = d3.select("#senatorPortrait").append("defs");
 
         	// Hillary Node
@@ -157,7 +157,7 @@
         		.attr("class", "inner")
         	  	.attr("r", rImage);
 
-        	addPortraitImage(defsHillary, "portrait_Hillary", imgURL_Hillary);
+        	addPortraitImage(defsMain, "portrait_Hillary", imgURL_Hillary);
             hillaryInnerCircle.style("fill", "url(#portrait_Hillary)");
 
         	// Load senator data
@@ -283,7 +283,11 @@
                 var senatorCircles = enter.append("g") // Add containers for individual senators
                     .attr("class", function(d, i) { return "senator " + d.party; } )
                     .attr("transform", function(d, i) { return "translate(" + rScale(d.id) + ",0)"} );
-                
+            
+                senatorCircles.append("circle") // Extends hover area
+                    .attr("class", "hoverarea")
+                    .attr("r", 20);
+
                 senatorCircles.append("circle") // Add outer circles for individual senators
                     .attr("r", rSmallNode);
 
@@ -338,9 +342,13 @@
                         // change fill url to url(#portrait_id);
                      });
                 });
-                // Add container, inner & outer circles
+
+                // Add container & circles
                 var senatorCircles = enter.append("g")
                     .attr("class", function(d, i) { return "senator " + d.party; } );
+                senatorCircles.append("circle") // Extends hover area
+                    .attr("class", "hoverarea")
+                    .attr("r", 20);
                 senatorCircles.append("circle")
                     .attr("r", rSmallNode);
 
