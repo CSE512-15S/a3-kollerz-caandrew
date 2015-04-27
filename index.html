@@ -18,6 +18,7 @@
                 <div id="svgContainer" class="col-md-8">
                 </div>
                 <div id="detailView" class="col-md-4">
+
                     <div id="controls">
                         <p>
                             <form class="form-horizontal">
@@ -30,13 +31,13 @@
                               <label class="col-md-4 control-label" for="gender">Gender</label>
                               <div class="col-md-4">
                               <div class="checkbox">
-                                <label for="gender-female">
+                                <label for="gender-male">
                                   <input type="checkbox" name="gender" id="gender-male" value="">
                                   Male
                                 </label>
                                 </div>
                               <div class="checkbox">
-                                <label for="gender-male">
+                                <label for="gender-female">
                                   <input type="checkbox" name="gender" id="gender-female" value="">
                                   Female
                                 </label>
@@ -48,7 +49,7 @@
                               <label class="col-md-4 control-label" for="bill">Supported Bill</label>
                               <div class="col-md-4">
                               <div class="checkbox">
-                                <label for="bil-yes">
+                                <label for="bill-yes">
                                   <input type="checkbox" name="billAffiliate" id="bill-yes" value="">
                                   Yes
                                 </label>
@@ -66,16 +67,27 @@
                             </form>
                         </p>
                     </div>
+
+                    <hr>
+
+                    <div id="info">
+                        <svg id="senatorPortrait"></svg>
+                        <p>
+                            <h3 id="senatorName"></h3>
+                            <span id="senatorState"></span>
+                        </p>
+                        <p>
+                            <span></span>
+                        </p>
+                    </div>
+
+                    <hr>
+                    
                     <div id="map">
                         <h3>Map</h3>
                         <p>This is where the map goes.</p>
                     </div>
-                    <div id="info">
-                        <h3>Info</h3>
-                        <p>
-                            <span id="senatorName"></span>
-                        </p>
-                    </div>
+
                 </div>
             </div>
         </div>
@@ -100,7 +112,7 @@
 
         	var imgURL_Hillary = "img/hillary.jpg";
 
-        	// SVG Elements
+        	// SVG Elements & other layout
             //------------------------------------------------------------------------
 			var svg = d3.select("#svgContainer").append("svg")
 			    .attr("width", width + margin.left + margin.right)
@@ -108,10 +120,25 @@
 			  .append("g")
 			    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-			var defs = svg.append("defs");
-
             var nonEndorsingNodes = svg.append("g").attr("class", "grid")
                 .attr("transform", "translate(" + originNonEndorsing.x + "," + originNonEndorsing.y + ")");
+
+            // Little senator portrait
+            var portraitWidth = rBigNode + 1;
+            var senatorHead = d3.select("#senatorPortrait").append("g")
+                .attr("class", "head")
+                .attr("transform", "translate(" + portraitWidth + "," + portraitWidth + ")");
+
+            senatorHead.append("circle")
+                .attr("class", "outer")
+                .attr("r", rBigNode);
+
+            senatorHead.append("circle")
+                .attr("class", "inner")
+                .attr("r", rImage);
+
+            var defsHillary = svg.append("defs");
+            var defsSenatorPortrait = d3.select("#senatorPortrait").append("defs");
 
         	// Hillary Node
             //------------------------------------------------------------------------
@@ -130,7 +157,8 @@
         		.attr("class", "inner")
         	  	.attr("r", rImage);
 
-        	addCircleBackground(hillaryInnerCircle, "portrait_Hillary", imgURL_Hillary);
+        	addPortraitImage(defsHillary, "portrait_Hillary", imgURL_Hillary);
+            hillaryInnerCircle.style("fill", "url(#portrait_Hillary)");
 
         	// Load senator data
             //------------------------------------------------------------------------
@@ -169,22 +197,20 @@
                     filterBillNo = false;
                 }
 
-                console.log(filterFemale);
-
                 // Filter senators 
                 var filtered = senators.filter(function(d) {
                     var show = true;
                     if (filterFemale) {
-                        show = show && d.isFemale;
+                        show = show & d.isFemale;
                     } 
                     if (filterMale) {
-                        show = show && !d.isFemale;
+                        show = show & !d.isFemale;
                     } 
                     if (filterBillYes) {
-                        show = show && d.isBillAffiliate;
+                        show = show & d.isBillAffiliate;
                     }
                     if (filterBillNo) {
-                        show = show && !d.isBillAffiliate;
+                        show = show & !d.isBillAffiliate;
                     }
                     return show;
                 });
@@ -242,11 +268,16 @@
                 // arrange rays circularly
                 enter.attr("transform", function(d) { return "rotate(" + -angle(d.id) + ")"; });
                 
-                // Add event listener for mouseover
+                // Show senator detail on mouseover
                 enter.each(function (d,i) {
-                    d3.select(this).on("mouseover", function() {
+                    d3.select(this).on("mouseover", function() { 
                         d3.select("#senatorName").html(d.name);
-                    });
+                        d3.select("#senatorState").html(d.state);                
+                        // TO DO 
+                        //
+                        // add more details
+                        // change fill url to url(#portrait_id);
+                     });
                 });
 
                 var senatorCircles = enter.append("g") // Add containers for individual senators
@@ -254,21 +285,12 @@
                     .attr("transform", function(d, i) { return "translate(" + rScale(d.id) + ",0)"} );
                 
                 senatorCircles.append("circle") // Add outer circles for individual senators
-                    .attr("class", "outer")
                     .attr("r", rSmallNode);
-                
-                senatorCircles.append("circle") // Add inner circles for individual senators 
-                    .attr("class", "inner")
-                    .attr("r", 0)
-                    .attr("transform", function(d, i) { return "rotate(" + angle(d.id) + ")"; }); // Rotate the pictures backwards such that they're level
 
                 senatorCircles.each(function(d,i) {
-                    // Add Picture to each senator
-                    var innerCircle = d3.select(this).select(".inner");
-                    addCircleBackground(innerCircle, "portrait_" + d.id, d.img);
+                    // Add Picture for senator
+                    addPortraitImage(defsSenatorPortrait, "portrait_" + d.id, d.img);
                 });
-
-                senatorCircles.on("click", makeBigOrSmall); // Add event listener for click
 
                 //UPDATE: Set current elements to visible
                 rays.transition().duration(animate?500:0).style("opacity", 1.0);
@@ -305,30 +327,27 @@
                 // Arrange areas linearly
                 enter.attr("transform", function(d) { return "translate(" + xScale(d.id) + ", " + yScale(d.id) + " )"; });
 
-                // Add event listener for mouseover
+                // Show senator detail on mouseover
                 enter.each(function (d,i) {
-                    d3.select(this).on("mouseover", function() {
+                    d3.select(this).on("mouseover", function() { 
                         d3.select("#senatorName").html(d.name);
-                    });
+                        d3.select("#senatorState").html(d.state);                
+                        // TO DO 
+                        //
+                        // add more details
+                        // change fill url to url(#portrait_id);
+                     });
                 });
-
                 // Add container, inner & outer circles
-                senatorCircles = enter.append("g")
+                var senatorCircles = enter.append("g")
                     .attr("class", function(d, i) { return "senator " + d.party; } );
                 senatorCircles.append("circle")
-                    .attr("class", "outer")
                     .attr("r", rSmallNode);
-                senatorCircles.append("cirlce")
-                    .attr("class", "inner")
-                    .attr("r", 0);
 
                 senatorCircles.each(function(d,i) {
-                    // Add Picture to each senator
-                    var innerCircle = d3.select(this).select(".inner");
-                    addCircleBackground(innerCircle, "portrait_" + d.id, d.img);
+                    // Add Picture for senator
+                    addPortraitImage(defsSenatorPortrait, "portrait_" + d.id, d.img);
                 });
-
-                senatorCircles.on("click", makeBigOrSmall); // Add event listener for click
 
                 //UPDATE: Set current elements to visible
                 areas.transition().duration(animate?500:0).style("opacity", 1.0);
@@ -337,8 +356,8 @@
                 areas.exit().transition().duration(animate?500:0).style("opacity", 0.2);
             }
 
-        	// adds image from url to circle. Id is unique identifier connecting the image
-        	function addCircleBackground(circle, id, url) {
+        	// adds image from url to circle as pattern to defs. Id is unique identifier connecting the image
+        	function addPortraitImage(defs, id, url) {
 	        	defs.append("pattern")
 	        		.attr("id", id)
 	        		.attr("x", -rImage)
@@ -352,33 +371,7 @@
 	        	  	.attr("height", 2*rImage)
 	        		.attr("width", 2*rImage)
 	        	  	.attr("xlink:href", url);
-
-	        	circle.style("fill", "url(#" + id + ")");
         	}
-
-        	// make slave node big or small
-        	function makeBigOrSmall(d,i) {
-	        		var innerCircle = d3.select(this).select(".inner");
-	        		var outerCircle = d3.select(this).select(".outer");
-	        		var isClosed = innerCircle.attr("r") == 0;
-
-                    // Close currently open circle, if any
-                    var openCircle = d3.select(".isOpen");
-                    if (openCircle) {
-                        openCircle.select(".inner").transition().attr("r", 0);
-                        openCircle.select(".outer").transition().attr("r", rSmallNode);
-                        openCircle.classed("isOpen", false);
-                    }
-
-	        		if (isClosed) {
-	        			innerCircle.transition().attr("r", rImage);
-	        			outerCircle.transition().attr("r", rBigNode);
-                        d3.select(this).classed("isOpen", true);
-	        		} else {
-	        			innerCircle.transition().attr("r", 0);
-	        			outerCircle.transition().attr("r", rSmallNode);
-	        		}
-	        	}
 
 		</script>
 
