@@ -65,15 +65,16 @@ body {
 	height: 102px;
 	position: absolute;
 	top: 25px;
-	right: 5px;
+	right: 0px;
 }
 #senatorName {
 	margin-bottom: 2px;
 }
 #map {
 	position: absolute;
-	bottom: 0px;
-	right: -50px;
+	bottom: 10px;
+	right: -10px;
+	width: 300px;
 }
 
 /* BOOTSTRAP OVERRIDES */

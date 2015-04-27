@@ -156,33 +156,9 @@
 
             // Map
             //------------------------------------------------------------------------
-            var map = d3.select("#map").append("svg")
-            	.attr("width", 399)
-            	.attr("height", 200);
-
-            var projection = d3.geo.albersUsa()
-                .scale(400)
-                .translate([200, 100]);
-
-            var path = d3.geo.path()
-                .projection(projection);
-
-            queue()
-    		.defer(d3.json, "us.json")
-    		.await(mapReady);
-
-			function mapReady(error, us) {
-              map.insert("path", ".graticule")
-                  .datum(topojson.feature(us, us.objects.land))
-                  .attr("class", "land")
-                  .attr("d", path);
-
-              map.insert("path", ".graticule")
-                  .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
-                  .attr("class", "state-boundary")
-                  .attr("d", path);
-        	}
-
+			d3.xml("img/us.svg", "image/svg+xml", function(xml) {
+			  document.getElementById("map").appendChild(xml.documentElement);
+			});
 
             // Checkbox stuff
             //------------------------------------------------------------------------
@@ -276,9 +252,19 @@
                 
                 // Show senator detail on mouseover
                 enter.each(function (d,i) {
-                    d3.select(this).on("mouseover", function() { 
+                    d3.select(this).on("mouseenter", function() { 
                         d3.select("#senatorName").html(d.name);
-                        d3.select("#senatorState").html(d.state);                
+                        d3.select("#senatorState").html(d.state); 
+                        d3.select("#" + d.stateAbbreviation).style("fill", "#aaa");               
+                        // TO DO 
+                        //
+                        // add more details
+                        // change fill url to url(#portrait_id);
+                     });
+                     d3.select(this).on("mouseleave", function() { 
+                        d3.select("#senatorName").html("");
+                        d3.select("#senatorState").html(""); 
+                        d3.select("#" + d.stateAbbreviation).style("fill", "#E0E0E0");               
                         // TO DO 
                         //
                         // add more details
@@ -339,9 +325,19 @@
 
                 // Show senator detail on mouseover
                 enter.each(function (d,i) {
-                    d3.select(this).on("mouseover", function() { 
+                    d3.select(this).on("mouseenter", function() { 
                         d3.select("#senatorName").html(d.name);
-                        d3.select("#senatorState").html(d.state);                
+                        d3.select("#senatorState").html(d.state); 
+                        d3.select("#" + d.stateAbbreviation).style("fill", "#aaa");               
+                        // TO DO 
+                        //
+                        // add more details
+                        // change fill url to url(#portrait_id);
+                     });
+                     d3.select(this).on("mouseleave", function() { 
+                        d3.select("#senatorName").html("");
+                        d3.select("#senatorState").html(""); 
+                        d3.select("#" + d.stateAbbreviation).style("fill", "#E0E0E0");               
                         // TO DO 
                         //
                         // add more details
