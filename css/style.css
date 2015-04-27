@@ -27,6 +27,16 @@
 	fill: #fefefe;
 }
 
+/* MAP */
+.land {
+  fill: #aaa;
+}
+
+.state-boundary {
+  fill: none;
+  stroke: #fefefe;
+}
+
 /* HTML LAYOUT */
 
 body { 
@@ -34,7 +44,7 @@ body {
 }
 #info {
 	position: relative;
-	height: 200px;
+	height: 450px;
 }
 #senatorPortrait {
 	width: 102px;
@@ -45,4 +55,9 @@ body {
 }
 #senatorName {
 	margin-bottom: 2px;
+}
+#map {
+	position: absolute;
+	bottom: 0px;
+	right: 5px;
 }

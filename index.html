@@ -9,7 +9,9 @@
 
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <link rel="stylesheet" href="css/style.css">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.4.1/d3.min.js"></script>
+        <script src="http://d3js.org/d3.v3.min.js"></script>
+        <script src="http://d3js.org/queue.v1.min.js"></script>
+        <script src="http://d3js.org/topojson.v1.min.js"></script>
     </head>
     <body>
 
@@ -79,15 +81,9 @@
                         <p>
                             <span></span>
                         </p>
-                    </div>
 
-                    <hr>
-                    
-                    <div id="map">
-                        <h3>Map</h3>
-                        <p>This is where the map goes.</p>
+                        <div id="map"></div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -98,7 +94,7 @@
             //------------------------------------------------------------------------
         	var margin = {top: 20, right: 10, bottom: 20, left: 30},
         		width = 760 - margin.left - margin.right,
-        		height = 680 - margin.top - margin.bottom,
+        		height = 700 - margin.top - margin.bottom,
         		center = { x: width / 2.0, 
         				   y: 240 },
         		radius = { maximum: 350, ring1: 170, ring2: 210, ring3: 250 },
@@ -177,6 +173,36 @@
         		// The initial display
         		update(senators, false);
         	});
+
+            // Map
+            //------------------------------------------------------------------------
+            var map = d3.select("#map").append("svg")
+            	.attr("width", 399)
+            	.attr("height", 200);
+
+            var projection = d3.geo.albersUsa()
+                .scale(400)
+                .translate([200, 100]);
+
+            var path = d3.geo.path()
+                .projection(projection);
+
+            queue()
+    		.defer(d3.json, "us.json")
+    		.await(mapReady);
+
+			function mapReady(error, us) {
+              map.insert("path", ".graticule")
+                  .datum(topojson.feature(us, us.objects.land))
+                  .attr("class", "land")
+                  .attr("d", path);
+
+              map.insert("path", ".graticule")
+                  .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
+                  .attr("class", "state-boundary")
+                  .attr("d", path);
+        	}
+
 
             // Checkbox stuff
             //------------------------------------------------------------------------
