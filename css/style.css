@@ -52,33 +52,37 @@ body {
 #svgContainer svg {
 	z-index: 0;
 }
-#svgContainer #controls {
+#controls {
 	z-index: 10;
 	position: absolute;
 	width: 200px;
-	top: 25px;
-	left: 35px;
+	left: 0px;
+}
+#controls .title {
+	white-space: nowrap;
+	margin-bottom: 20px;
+}
+#controls .form-group {
+	margin-left: 0px;
 }
 #info {
 	position: relative;
 	height: 680px;
-	padding: 10px 0 0 0;
+	padding: 10px 0 0 20px;
 }
 #senatorPortrait {
 	width: 102px;
 	height: 102px;
 	position: absolute;
-	top: 25px;
-	right: 0px;
+	top: 30px;
+	right: 10px;
 }
 #senatorName {
 	margin-bottom: 2px;
 }
 #map {
-	position: absolute;
-	bottom: 10px;
-	right: -10px;
-	width: 300px;
+	margin: 30px 0 0 20px;
+	width: 340px;
 }
 
 /* BOOTSTRAP OVERRIDES */

@@ -17,42 +17,42 @@
         <div class="container">
             <div id="main" class="row">
                 <div id="svgContainer" class="col-xs-8">
-
                 	<div id="controls">
-                        <p>
-                            <form class="form-horizontal">
-                            <fieldset>
+                        <h2 class="title">Senatorial stances on Hillary for President</h2>
+                        <form class="form-horizontal">
+                        <fieldset>
 
-                            <!-- Checkboxes -->
-                            <div class="form-group">
-                        		<label for="gender">Gender</label>
-                          		<div class="checkbox">
-                            		<label for="gender-male"><input type="checkbox" name="gender" id="gender-male" value="">Male</label>
-                            	</div>
-                          		<div class="checkbox">
-                          			<label for="gender-female"><input type="checkbox" name="gender" id="gender-female" value="">Female</label>
-                         		</div>
+                        <div class="form-group">
+                            <label for="billAffiliate">In Senate under Bill?</label>
+                            <div class="checkbox">
+                                <label for="bill-yes"><input type="checkbox" name="billAffiliate" id="bill-yes" value="">Yes</label>
                             </div>
+                            <div class="checkbox">
+                                <label for="bill-no"><input type="checkbox" name="billAffiliate" id="bill-no" value="">No</label>
+                            </div>
+                        </div>
 
-							<div class="form-group">
-								<label for="billAffiliate">Supported Bill?</label>
-							  	<div class="checkbox">
-									<label for="bill-yes"><input type="checkbox" name="billAffiliate" id="bill-yes" value="">Yes</label>
-								</div>
-							   	<div class="checkbox">
-							   		<label for="bill-no"><input type="checkbox" name="billAffiliate" id="bill-no" value="">No</label>
-							 	</div>
-							</div>
+                        <!-- Checkboxes -->
+                        <div class="form-group">
+                    		<label for="gender">Gender</label>
+                      		<div class="checkbox">
+                      			<label for="gender-female"><input type="checkbox" name="gender" id="gender-female" value="">Female</label>
+                     		</div>
+                            <div class="checkbox">
+                                <label for="gender-male"><input type="checkbox" name="gender" id="gender-male" value="">Male</label>
+                            </div>                                
+                        </div>
 
-                            </fieldset>
-                            </form>
-                        </p>
+                        </fieldset>
+                        </form>
                     </div>
 
                 </div>
                 <div id="detailView" class="col-xs-4">
+                    <div id="map"></div>
 
                     <div id="info">
+
                         <svg id="senatorPortrait"></svg>
                         <p>
                             <h3 id="senatorName"></h3>
@@ -62,7 +62,6 @@
                             <span></span>
                         </p>
 
-                        <div id="map"></div>
                     </div>
                 </div>
             </div>
@@ -75,8 +74,8 @@
         	var margin = {top: 20, right: 10, bottom: 20, left: 30},
         		width = 760 - margin.left - margin.right,
         		height = 700 - margin.top - margin.bottom,
-        		center = { x: 420, 
-        				   y: 240 },
+        		center = { x: 440, 
+        				   y: 275 },
         		radius = { maximum: 350, rings: [150, 190, 230] },
                 arcWidth = 0.2,
                 arcMargin = 40,
@@ -154,7 +153,7 @@
 
         		// The initial display
         		update(senators, false);
-                drawArcs(senators.filter(function(d) { return d.isEndorsing }));
+                //drawArcs(senators.filter(function(d) { return d.isEndorsing }));
         	});
 
             // Map
