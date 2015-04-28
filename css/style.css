@@ -26,6 +26,10 @@
 	stroke: #aaa;
 	fill: #fefefe;
 }
+.arc {
+	fill: none;
+	stroke: #cecece;
+}
 
 /* MAP */
 .land {

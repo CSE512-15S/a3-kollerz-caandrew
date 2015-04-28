@@ -77,7 +77,9 @@
         		height = 700 - margin.top - margin.bottom,
         		center = { x: 420, 
         				   y: 240 },
-        		radius = { maximum: 350, ring1: 170, ring2: 210, ring3: 250 },
+        		radius = { maximum: 350, rings: [150, 190, 230] },
+                arcWidth = 0.2,
+                arcMargin = 40,
         		rBigNode = 50,
         		rSmallNode = 10,
         		rImage = rBigNode * 0.75,
@@ -152,6 +154,7 @@
 
         		// The initial display
         		update(senators, false);
+                drawArcs(senators.filter(function(d) { return d.isEndorsing }));
         	});
 
             // Map
@@ -208,7 +211,7 @@
                 // Endorsing senators
                 // ------------------
                 updateEndorsing(data.filter(function(d) { return d.isEndorsing }), animate);
-        		
+
                 // Non-endorsing senators
                 // ----------------------
                 updateNonEndorsing(data.filter(function(d) { return !d.isEndorsing }), animate);
@@ -221,11 +224,11 @@
                     .domain(keys)
                     .range(data.map(function(d) {
                         if (d.reElectionYear == 2017) {
-                            return radius.ring1;
+                            return radius.rings[0];
                         } else if (d.reElectionYear == 2019) {
-                            return radius.ring2;
+                            return radius.rings[1];
                         } else if (d.reElectionYear == 2021) {
-                            return radius.ring3;
+                            return radius.rings[2];
                         } else {
                             console.log(d.reElectionYear);
                             return radius.maximum;
@@ -291,6 +294,7 @@
 
                 // EXIT: Set opactity to low for elements that are in exit set
                 rays.exit().transition().duration(animate?500:0).style("opacity", 0.2);
+
             }
 
             function updateNonEndorsing(data, animate) {
@@ -366,18 +370,41 @@
         	function addPortraitImage(defs, id, url) {
 	        	defs.append("pattern")
 	        		.attr("id", id)
-	        		.attr("x", -rImage)
-	        		.attr("y", -rImage)
-	        	  	.attr("height", 2*rImage)
-	        		.attr("width", 2*rImage)
+	        		.attr("x", -1.1 *rImage)
+	        		.attr("y", -1.1 * rImage)
+	        	  	.attr("height", 2.2*rImage)
+	        		.attr("width", 2.2*rImage)
 	        		.attr("patternUnits", "userSpaceOnUse")
 	        	  .append("image")
 	        	  	.attr("x", 0)
 	        	  	.attr("y", 0)
-	        	  	.attr("height", 2*rImage)
-	        		.attr("width", 2*rImage)
+	        	  	.attr("height", 2.2*rImage)
+	        		.attr("width", 2.2*rImage)
 	        	  	.attr("xlink:href", url);
         	}
+
+            function drawArcs(data) {
+                var N = data.length;
+                var years = [ 2017, 2019, 2021 ];
+                var startAngle = 1.63;
+                years.forEach(function(year, i) {
+                    // Get number of senators with this reelection year
+                    var n = data.filter(function(d) { return d.reElectionYear == year } ).length;
+                    var endAngle = startAngle - 2 * Math.PI * (n - 0.6) / N;
+                    console.log(endAngle);
+                    var innerRadius = radius.rings[i] + arcMargin;
+                    var arc = d3.svg.arc()
+                        .innerRadius(innerRadius)
+                        .outerRadius(innerRadius + arcWidth)
+                        .startAngle(startAngle)
+                        .endAngle(endAngle);
+
+                    hillary.append("path").attr("d", arc)
+                        .attr("class", "arc");
+
+                    startAngle = endAngle - 0.14;
+                });
+            }
 
 		</script>
 
