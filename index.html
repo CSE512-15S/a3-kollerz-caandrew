@@ -30,7 +30,16 @@
                             </div>
                         </div>
 
-                        <!-- Checkboxes -->
+                        <div class="form-group">
+                            <label for="party">Party</label>
+                            <div class="checkbox">
+                                <label for="party-democrat"><input type="checkbox" name="party" id="party-democrat" value="">Democratic</label>
+                            </div>
+                            <div class="checkbox">
+                                <label for="party-republican"><input type="checkbox" name="party" id="party-republican" value="">Republican</label>
+                            </div>                                    
+                        </div>
+
                         <div class="form-group">
                     		<label for="gender">Gender</label>
                       		<div class="checkbox">
@@ -161,7 +170,6 @@
 
         		// The initial display
         		update(senators, false);
-                //drawArcs(senators.filter(function(d) { return d.isEndorsing }));
         	});
 
             // Map
@@ -178,6 +186,8 @@
                 var filterMale = document.getElementById("gender-male").checked;
                 var filterBillYes = document.getElementById("bill-yes").checked;
                 var filterBillNo = document.getElementById("bill-no").checked;
+                var filterRepublican = document.getElementById("party-republican").checked;
+                var filterDemocratic = document.getElementById("party-democrat").checked;
 
                 if (filterFemale && filterMale) { // Show both
                     filterFemale = false;
@@ -187,6 +197,11 @@
                 if (filterBillYes && filterBillNo) { // Show both
                     filterBillYes = false;
                     filterBillNo = false;
+                }
+
+                if (filterRepublican && filterDemocratic) {
+                    filterDemocratic = false;
+                    filterRepublican = false;
                 }
 
                 // Filter senators 
@@ -203,6 +218,12 @@
                     }
                     if (filterBillNo) {
                         show = show & !d.isBillAffiliate;
+                    }
+                    if (filterRepublican) {
+                        show = show & d.party == "Republican"
+                    }
+                    if (filterDemocratic) {
+                        show = show & d.party == "Democratic"
                     }
                     return show;
                 });
