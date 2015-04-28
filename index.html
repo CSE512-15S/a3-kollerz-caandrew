@@ -9,8 +9,6 @@
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <link rel="stylesheet" href="css/style.css">
         <script src="http://d3js.org/d3.v3.min.js"></script>
-        <script src="http://d3js.org/queue.v1.min.js"></script>
-        <script src="http://d3js.org/topojson.v1.min.js"></script>
     </head>
     <body>
 
@@ -361,7 +359,7 @@
             function attachSenatorEventHandlers(d,i,DOMElement) {
                 d3.select(DOMElement).on("mouseenter", function() {                         
                     // General details
-                    setSenatorDetails(d);
+                    setSenatorDetails(d, true);
                     // Make visible
                     d3.select("#info").classed("hidden", false);
                 });
@@ -371,7 +369,7 @@
                         d3.select("#info").classed("hidden", true);
                     } else {
                         // Show details of selected senator again
-                        setSenatorDetails(selectedSenator);
+                        setSenatorDetails(selectedSenator, false);
                     }
                 });
                 d3.select(DOMElement).on("click", function() {
@@ -383,7 +381,7 @@
                         d3.select("#info").classed("hidden", true);
                     } else { // Select another senator
                         selectedSenator = d;
-                        setSenatorDetails(d);
+                        setSenatorDetails(d, false);
                         d3.select("#" + d.stateAbbreviation).classed("selected", true);
                         d3.select("#" + d.stateAbbreviation).classed(d.party, true);
                         d3.select("#info").classed("hidden", false);
@@ -394,7 +392,7 @@
 
 
             // Displays details about senator d.
-            function setSenatorDetails(d) {
+            function setSenatorDetails(d, hover) {
                 d3.select("#senatorName").html(d.name);
                 d3.select("#senatorState").html(d.state); 
                 d3.select("#senatorBirthdate").html(d.birthdate);
@@ -404,7 +402,7 @@
 
                 d3.select("#senatorBillTerms").html(billTermString);
 
-                d3.select("#" + d.stateAbbreviation).classed("hover", true); 
+                d3.select("#" + d.stateAbbreviation).classed("hover", hover); 
 
                 senatorPortrait.style("fill", "url(#portrait_" + d.id + ")");
             }
