@@ -51,13 +51,21 @@
                 <div id="detailView" class="col-xs-4">
                     <div id="map"></div>
 
-                    <div id="info">
+                    <div id="info" class="hidden">
 
                         <svg id="senatorPortrait"></svg>
-                        <p>
-                            <h3 id="senatorName"></h3>
-                            <span id="senatorState"></span>
-                        </p>
+                        <div>
+                            <p>
+                                <h3 id="senatorName"></h3>
+                                <span id="senatorState"></span>
+                            </p>
+                            <p class="details">
+                                Born <b><span id="senatorBirthdate"></span></b><br/>
+                                Attended <b><span id="senatorEducation"></span></b><br/>
+                                First assumed office <b><span id="senatorStartdate"></span></b><br/>
+                                <span id="senatorBillTerms"></span>
+                            </p>
+                        </div>
                         <p>
                             <span></span>
                         </p>
@@ -86,6 +94,8 @@
                 dimensionsNonEndorsing = { width: width, height: 140},
                 nRows = 4,     // Number of rows
                 nCols = 20;    // Number of nodes in a row
+
+            var selectedSenator = null; // This gets set if a senator is clicked.
 
         	var imgURL_Hillary = "img/hillary.jpg";
 
@@ -252,25 +262,8 @@
                 // arrange rays circularly
                 enter.attr("transform", function(d) { return "rotate(" + -angle(d.id) + ")"; });
                 
-                // Show senator detail on mouseover
-                enter.each(function (d,i) {
-                    d3.select(this).on("mouseenter", function() { 
-                        d3.select("#senatorName").html(d.name);
-                        d3.select("#senatorState").html(d.state); 
-                        d3.select("#" + d.stateAbbreviation).style("fill", "#aaa"); 
-                        senatorPortrait.style("fill", "url(#portrait_" + d.id + ")");              
-                        // TO DO 
-                        //
-                        // add more details
-                        // change fill url to url(#portrait_id);
-                     });
-                     d3.select(this).on("mouseleave", function() { // Mouse leave. Reset details.
-                        d3.select("#senatorName").html("");
-                        d3.select("#senatorState").html(""); 
-                        d3.select("#" + d.stateAbbreviation).style("fill", "#E0E0E0");
-                        senatorPortrait.style("fill", "rgba(0,0,0,0)");               
-                     });
-                });
+                // Attach event handlers for senators
+                enter.each(function(d,i) { attachSenatorEventHandlers(d, i, this) });
 
                 var senatorCircles = enter.append("g") // Add containers for individual senators
                     .attr("class", function(d, i) { return "senator " + d.party; } )
@@ -325,24 +318,7 @@
                 enter.attr("transform", function(d) { return "translate(" + xScale(d.id) + ", " + yScale(d.id) + " )"; });
 
                 // Show senator detail on mouseover
-                enter.each(function (d,i) {
-                    d3.select(this).on("mouseenter", function() { 
-                        d3.select("#senatorName").html(d.name);
-                        d3.select("#senatorState").html(d.state); 
-                        d3.select("#" + d.stateAbbreviation).style("fill", "#aaa");
-                        senatorPortrait.style("fill", "url(#portrait_" + d.id + ")");              
-                        // TO DO 
-                        //
-                        // add more details
-                        // change fill url to url(#portrait_id);
-                     });
-                     d3.select(this).on("mouseleave", function() { // Mouse leave. Reset details.
-                        d3.select("#senatorName").html("");
-                        d3.select("#senatorState").html(""); 
-                        d3.select("#" + d.stateAbbreviation).style("fill", "#E0E0E0");  
-                        senatorPortrait.style("fill", "rgba(0,0,0,0)");                           
-                     });
-                });
+                enter.each(function(d,i) { attachSenatorEventHandlers(d, i, this) });
 
                 // Add container & circles
                 var senatorCircles = enter.append("g")
@@ -382,6 +358,59 @@
 	        	  	.attr("xlink:href", url);
         	}
 
+            function attachSenatorEventHandlers(d,i,DOMElement) {
+                d3.select(DOMElement).on("mouseenter", function() {                         
+                    // General details
+                    setSenatorDetails(d);
+                    // Make visible
+                    d3.select("#info").classed("hidden", false);
+                });
+                d3.select(DOMElement).on("mouseleave", function() { // Mouse leave. Hide #info, if no senator is currently selected
+                    d3.select(".state.hover").classed("hover", false);
+                    if (selectedSenator === null) {
+                        d3.select("#info").classed("hidden", true);
+                    } else {
+                        // Show details of selected senator again
+                        setSenatorDetails(selectedSenator);
+                    }
+                });
+                d3.select(DOMElement).on("click", function() {
+                    d3.select(".senator.selected").classed("selected", false); 
+                    d3.select(".state.selected").classed("selected", false); 
+                    d3.select(".state.hover").classed("hover", false); 
+                    if (selectedSenator && selectedSenator.id == d.id) { // Deselect current senator
+                        selectedSenator == null;
+                        d3.select("#info").classed("hidden", true);
+                    } else { // Select another senator
+                        selectedSenator = d;
+                        setSenatorDetails(d);
+                        d3.select("#" + d.stateAbbreviation).classed("selected", true);
+                        d3.select("#" + d.stateAbbreviation).classed(d.party, true);
+                        d3.select("#info").classed("hidden", false);
+                        d3.select(DOMElement).select(".senator").classed("selected", true);
+                    }
+                });
+            }
+
+
+            // Displays details about senator d.
+            function setSenatorDetails(d) {
+                d3.select("#senatorName").html(d.name);
+                d3.select("#senatorState").html(d.state); 
+                d3.select("#senatorBirthdate").html(d.birthdate);
+                d3.select("#senatorStartdate").html(d.start);
+                d3.select("#senatorEducation").html(d.education.toString());
+                var billTermString = (d.cntBillTerms == 0) ? "Served no terms under Bill" : "Served <b>" + d.cntBillTerms + "</b> terms under Bill";
+
+                d3.select("#senatorBillTerms").html(billTermString);
+
+                d3.select("#" + d.stateAbbreviation).classed("hover", true); 
+
+                senatorPortrait.style("fill", "url(#portrait_" + d.id + ")");
+            }
+
+            /*
+
             function drawArcs(data) {
                 var N = data.length;
                 var years = [ 2017, 2019, 2021 ];
@@ -404,6 +433,8 @@
                     startAngle = endAngle - 0.14;
                 });
             }
+
+            */
 
 		</script>
 

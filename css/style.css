@@ -26,19 +26,34 @@
 	stroke: #aaa;
 	fill: #fefefe;
 }
-.arc {
-	fill: none;
-	stroke: #cecece;
+.senator.selected circle.hoverarea {
+	stroke: #228B22;
+	fill: #fefefe;
 }
-
+.senator.Democratic.selected circle.hoverarea {
+	stroke: MediumBlue;
+	fill: #fefefe;
+}
+.senator.Republican.selected circle.hoverarea {
+	stroke: Crimson;
+	fill: #fefefe;
+}
 /* MAP */
 .land {
   fill: #aaa;
 }
-
 .state-boundary {
   fill: none;
   stroke: #fefefe;
+}
+.state.hover {
+	fill: #aaa;
+}
+.state.selected.Democratic {
+	fill: MediumBlue;
+}
+.state.selected.Republican {
+	fill: Crimson;
 }
 
 /* HTML LAYOUT */
@@ -68,14 +83,17 @@ body {
 #info {
 	position: relative;
 	height: 680px;
-	padding: 10px 0 0 20px;
+	padding: 15px 0 0 20px;
+}
+#info .details {
+	margin: 25px 0 0 0;
 }
 #senatorPortrait {
 	width: 102px;
 	height: 102px;
 	position: absolute;
-	top: 30px;
-	right: 10px;
+	top: 20px;
+	right: 0px;
 }
 #senatorName {
 	margin-bottom: 2px;
