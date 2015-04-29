@@ -62,7 +62,14 @@
 
                 </div>
                 <div id="detailView" class="col-xs-4">
-                    <div id="map"></div>
+                    <div class="mapContainer">
+                        <div id="map"></div>
+                        <div>
+                            <input class="btn btn-default" type="button" id="clearMap" value="show all states" disabled />
+                        </div>
+                    </div>
+
+                    <hr>
 
                     <div id="info" class="hidden">
 
@@ -197,11 +204,22 @@
             //------------------------------------------------------------------------
 			d3.xml("img/us.svg", "image/svg+xml", function(xml) {
 			    document.getElementById("map").appendChild(xml.documentElement);
+                // Add onclick filter for states
                 d3.selectAll(".state").on("click", function(d) {
                     var state = d3.select(this).attr("id");
+                    d3.select(".state.filtered").classed("filtered", false);
+                    d3.select(this).classed("filtered", true);
+                    d3.select("#clearMap").attr("disabled", null);
                     update(senators.filter(function(d) { return d.stateAbbreviation == state; }), true);
                 });
 			});
+
+            // Button that clears onclick filter for states
+            d3.select("#clearMap").on("click", function() {
+                update(senators, true);
+                d3.select(".state.filtered").classed("filtered", false);
+                d3.select("#clearMap").attr("disabled", "disabled");
+            });
 
             // Checkbox stuff
             //------------------------------------------------------------------------
