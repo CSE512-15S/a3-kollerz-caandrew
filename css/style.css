@@ -84,22 +84,28 @@ body {
 	margin-left: 0px;
 }
 #info {
+	text-align: right;
 	position: relative;
-	height: 680px;
-	padding: 15px 0 0 20px;
+	padding: 15px 0 0 0;
 }
 #info .details {
-	margin: 25px 0 0 0;
+	text-align: left;
+	margin: 25px 0 0 65px;
+	width: 295px;
 }
 #senatorPortrait {
 	width: 102px;
 	height: 102px;
 	position: absolute;
-	top: 20px;
+	top: 15px;
 	right: 0px;
 }
 #senatorName {
 	margin-bottom: 2px;
+	margin-right: 106px;
+}
+#senatorState {
+	margin-right: 110px;
 }
 #map {
 	margin: 30px 0 0 20px;
@@ -116,4 +122,7 @@ body {
 }
 #controls * {
 	overflow: visible;
+}
+.form-horizontal .checkbox {
+	padding-top: 0;
 }

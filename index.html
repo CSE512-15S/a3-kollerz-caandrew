@@ -136,8 +136,9 @@
 
             // No known endorsement labels
             svg.append("text").text("No known endorsement:")
-                .attr("x", originNonEndorsing.x - 10)
-                .attr("y", originNonEndorsing.y + 5);
+                .style("font-weight", "bold")
+                .attr("x", originNonEndorsing.x - 11)
+                .attr("y", originNonEndorsing.y + 7);
 
             var nneLabels = svg.append("g")
                 .attr("transform", "translate(0," + originNonEndorsing.y + ")");
