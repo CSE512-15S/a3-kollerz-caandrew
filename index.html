@@ -87,20 +87,19 @@
         	// Parameters
             //------------------------------------------------------------------------
         	var margin = {top: 20, right: 10, bottom: 20, left: 30},
-        		width = 760 - margin.left - margin.right,
+        		width = 1170 - margin.left - margin.right,
         		height = 700 - margin.top - margin.bottom,
-        		center = { x: 440, 
-        				   y: 275 },
+        		center = { x: 450, 
+        				   y: 290 },
         		radius = { maximum: 350, rings: [150, 190, 230] },
                 arcWidth = 0.2,
                 arcMargin = 40,
         		rBigNode = 50,
         		rSmallNode = 10,
         		rImage = rBigNode * 0.75,
-                originNonEndorsing = { x: 0, y: 500 },
-                dimensionsNonEndorsing = { width: width, height: 140},
-                nRows = 4,     // Number of rows
-                nCols = 20;    // Number of nodes in a row
+                originNonEndorsing = { x: 0, y: 550 },
+                nonEndorsingStride = 36.0,
+                nRows = 4;     // Number of rows
 
             var selectedSenator = null; // This gets set if a senator is clicked.
 
@@ -133,6 +132,11 @@
 
             var defsMain = svg.append("defs");
             var defsSenatorPortrait = d3.select("#senatorPortrait").append("defs");
+
+            // No known endorsement label
+            svg.append("text").text("No known endorsement:")
+                .attr("x", originNonEndorsing.x - 10)
+                .attr("y", originNonEndorsing.y + 5);
 
         	// Hillary Node
             //------------------------------------------------------------------------
@@ -309,20 +313,45 @@
             }
 
             function updateNonEndorsing(data, animate) {
-                keys = data.map(function(d) { return d.id; });
+                var keys = data.map(function(d) { return d.id; });
+
+                var reElectionYearCounts = [2017, 2019, 2021].map(function(year) {
+                    return data.reduce(function(n, d) {
+                        return n + (d.reElectionYear === year)
+                    }, 0);
+                });
 
                 var xScale = d3.scale.ordinal()
                     .domain(keys)
-                    .range(keys.map(function(d,i) {
-                        var col = i % nCols;
-                        return col * dimensionsNonEndorsing.width / nCols;
+                    .range(data.map(function(d,i) {
+                        var idx; 
+                        if (d.reElectionYear == 2017) {
+                            idx = i;
+                        } else if (d.reElectionYear == 2019) {
+                            idx = i - reElectionYearCounts[0];
+                        } else if (d.reElectionYear == 2021) {
+                            idx = i - reElectionYearCounts[0] - reElectionYearCounts[1];
+                        } else {
+                            idx = i - reElectionYearCounts[0] - reElectionYearCounts[1] - reElectionYearCounts[2];
+                        }
+
+                        return idx * nonEndorsingStride;
                     }));
 
                 var yScale = d3.scale.ordinal()
                     .domain(keys)
-                    .range(keys.map(function(d,i) { 
-                        var row = Math.floor(i / nCols);
-                        return dimensionsNonEndorsing.height - row * dimensionsNonEndorsing.height / nRows;
+                    .range(data.map(function(d,i) { 
+                        var row;
+                        if (d.reElectionYear == 2017) {
+                            row = 1;
+                        } else if (d.reElectionYear == 2019) {
+                            row = 2;
+                        } else if (d.reElectionYear == 2021) {
+                            row = 3;
+                        } else {
+                            row = 4;
+                        }
+                        return row * nonEndorsingStride;
                     }));
 
                 // DATA JOIN
@@ -419,7 +448,13 @@
                 d3.select("#senatorBirthdate").html(d.birthdate);
                 d3.select("#senatorStartdate").html(d.start);
                 d3.select("#senatorEducation").html(d.education.toString());
-                var billTermString = (d.cntBillTerms == 0) ? "Served no terms under Bill" : "Served <b>" + d.cntBillTerms + "</b> terms under Bill";
+                
+                var billTermString;
+                if (d.cntBillTerms == 0) {
+                    billTermString = "Served no terms under Bill";
+                } else { 
+                    billTermString = (d.cntBillTerms == 1) ? "Served one term under Bill"  : "Served " + d.cntBillTerms + " terms under Bill";
+                }
 
                 d3.select("#senatorBillTerms").html(billTermString);
 

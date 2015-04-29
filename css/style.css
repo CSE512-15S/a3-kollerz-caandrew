@@ -55,6 +55,9 @@
 .state.selected.Republican {
 	fill: Crimson;
 }
+.state.selected.Independent {
+	fill: #228B22;
+}
 
 /* HTML LAYOUT */
 
