@@ -97,10 +97,11 @@
         		rBigNode = 50,
         		rSmallNode = 10,
         		rImage = rBigNode * 0.75,
-                originNonEndorsing = { x: 0, y: 550 },
+                originNonEndorsing = { x: 60, y: 550 },
                 nonEndorsingStride = 36.0,
                 nRows = 4;     // Number of rows
 
+            var reElectionYears = [ 2017, 2019, 2021 ];
             var selectedSenator = null; // This gets set if a senator is clicked.
 
         	var imgURL_Hillary = "img/hillary.jpg";
@@ -133,10 +134,20 @@
             var defsMain = svg.append("defs");
             var defsSenatorPortrait = d3.select("#senatorPortrait").append("defs");
 
-            // No known endorsement label
+            // No known endorsement labels
             svg.append("text").text("No known endorsement:")
                 .attr("x", originNonEndorsing.x - 10)
                 .attr("y", originNonEndorsing.y + 5);
+
+            var nneLabels = svg.append("g")
+                .attr("transform", "translate(0," + originNonEndorsing.y + ")");
+
+            reElectionYears.forEach(function(year, i) {
+                nneLabels.append("text").text(year)
+                    .attr("class", "small")
+                    .attr("x", 0)
+                    .attr("y", 7 + (i + 1) * nonEndorsingStride);
+            });
 
         	// Hillary Node
             //------------------------------------------------------------------------
@@ -315,7 +326,7 @@
             function updateNonEndorsing(data, animate) {
                 var keys = data.map(function(d) { return d.id; });
 
-                var reElectionYearCounts = [2017, 2019, 2021].map(function(year) {
+                var reElectionYearCounts = reElectionYears.map(function(year) {
                     return data.reduce(function(n, d) {
                         return n + (d.reElectionYear === year)
                     }, 0);
@@ -476,7 +487,7 @@
                     console.log(endAngle);
                     var innerRadius = radius.rings[i] + arcMargin;
                     var arc = d3.svg.arc()
-                        .innerRadius(innerRadius)
+                        .innerRadius(0)
                         .outerRadius(innerRadius + arcWidth)
                         .startAngle(startAngle)
                         .endAngle(endAngle);
