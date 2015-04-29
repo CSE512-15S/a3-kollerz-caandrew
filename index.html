@@ -89,15 +89,14 @@
         	var margin = {top: 20, right: 10, bottom: 20, left: 30},
         		width = 1170 - margin.left - margin.right,
         		height = 700 - margin.top - margin.bottom,
-        		center = { x: 450, 
-        				   y: 290 },
+        		center = { x: 450, y: 290 },
         		radius = { maximum: 350, rings: [150, 190, 230] },
                 arcWidth = 0.2,
                 arcMargin = 40,
         		rBigNode = 50,
         		rSmallNode = 10,
         		rImage = rBigNode * 0.75,
-                originNonEndorsing = { x: 60, y: 550 },
+                originNonEndorsing = { x: 30, y: 550 },
                 nonEndorsingStride = 36.0,
                 nRows = 4;     // Number of rows
 
@@ -141,7 +140,7 @@
                 .attr("y", originNonEndorsing.y + 7);
 
             var nneLabels = svg.append("g")
-                .attr("transform", "translate(0," + originNonEndorsing.y + ")");
+                .attr("transform", "translate(" + (originNonEndorsing.x - 50) + " ," + originNonEndorsing.y + ")");
 
             reElectionYears.forEach(function(year, i) {
                 nneLabels.append("text").text(year)
@@ -191,7 +190,11 @@
             // Map
             //------------------------------------------------------------------------
 			d3.xml("img/us.svg", "image/svg+xml", function(xml) {
-			  document.getElementById("map").appendChild(xml.documentElement);
+			    document.getElementById("map").appendChild(xml.documentElement);
+                d3.selectAll(".state").on("click", function(d) {
+                    var state = d3.select(this).attr("id");
+                    update(senators.filter(function(d) { return d.stateAbbreviation == state; }), true);
+                });
 			});
 
             // Checkbox stuff
@@ -474,33 +477,6 @@
 
                 senatorPortrait.style("fill", "url(#portrait_" + d.id + ")");
             }
-
-            /*
-
-            function drawArcs(data) {
-                var N = data.length;
-                var years = [ 2017, 2019, 2021 ];
-                var startAngle = 1.63;
-                years.forEach(function(year, i) {
-                    // Get number of senators with this reelection year
-                    var n = data.filter(function(d) { return d.reElectionYear == year } ).length;
-                    var endAngle = startAngle - 2 * Math.PI * (n - 0.6) / N;
-                    console.log(endAngle);
-                    var innerRadius = radius.rings[i] + arcMargin;
-                    var arc = d3.svg.arc()
-                        .innerRadius(0)
-                        .outerRadius(innerRadius + arcWidth)
-                        .startAngle(startAngle)
-                        .endAngle(endAngle);
-
-                    hillary.append("path").attr("d", arc)
-                        .attr("class", "arc");
-
-                    startAngle = endAngle - 0.14;
-                });
-            }
-
-            */
 
 		</script>
 

@@ -38,6 +38,7 @@
 	stroke: Crimson;
 	fill: #fefefe;
 }
+
 /* MAP */
 .land {
   fill: #aaa;
@@ -46,7 +47,10 @@
   fill: none;
   stroke: #fefefe;
 }
-.state.hover {
+.state {
+	cursor: pointer;
+}
+.state:hover, .state.hover {
 	fill: #aaa;
 }
 .state.selected.Democratic {
