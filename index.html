@@ -9,9 +9,9 @@
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <link rel="stylesheet" href="css/style.css">
         <script src="http://d3js.org/d3.v3.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
     </head>
     <body>
-
         <div class="container">
             <div id="main" class="row">
                 <div id="svgContainer" class="col-xs-8">
@@ -21,33 +21,39 @@
                         <fieldset>
 
                         <div class="form-group">
-                            <label for="billAffiliate">In Senate under Bill?</label>
-                            <div class="checkbox">
-                                <label for="bill-yes"><input type="checkbox" name="billAffiliate" id="bill-yes" value="">Yes</label>
-                            </div>
-                            <div class="checkbox">
-                                <label for="bill-no"><input type="checkbox" name="billAffiliate" id="bill-no" value="">No</label>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
                             <label for="party">Party</label>
-                            <div class="checkbox">
-                                <label for="party-democrat"><input type="checkbox" name="party" id="party-democrat" value="">Democratic</label>
-                            </div>
-                            <div class="checkbox">
-                                <label for="party-republican"><input type="checkbox" name="party" id="party-republican" value="">Republican</label>
-                            </div>                                    
+                            <div class="btn-group" data-toggle="buttons">
+                                <label for="party-democrat" class="btn btn-default">
+                                    <input type="checkbox" name="party" id="party-democrat" autocomplete="off">Democratic
+                                </label>
+                                <label for="party-republican" class="btn btn-default">
+                                    <input type="checkbox" name="party" id="party-republican" autocomplete="off">Republican
+                                </label>
+                            </div>                  
                         </div>
 
                         <div class="form-group">
-                    		<label for="gender">Gender</label>
-                      		<div class="checkbox">
-                      			<label for="gender-female"><input type="checkbox" name="gender" id="gender-female" value="">Female</label>
-                     		</div>
-                            <div class="checkbox">
-                                <label for="gender-male"><input type="checkbox" name="gender" id="gender-male" value="">Male</label>
-                            </div>                                
+                            <label for="billAffiliate">In Senate under Bill?</label>
+                            <div class="btn-group" data-toggle="buttons">
+                                <label for="bill-yes" class="btn btn-default">
+                                    <input type="checkbox" name="billAffiliate" id="bill-yes" autocomplete="off">Yes
+                                </label>
+                                <label for="bill-no" class="btn btn-default">
+                                    <input type="checkbox" name="billAffiliate" id="bill-no" autocomplete="off">No
+                                </label>
+                           </div> 
+                        </div>
+
+                        <div class="form-group">
+                    		<label for="gender">Gender</label><br/>
+                            <div class="btn-group" data-toggle="buttons">
+                                <label for="gender-female" class="btn btn-default">
+                                    <input type="checkbox" name="gender" id="gender-female" autocomplete="off">Female
+                                </label>
+                                <label for="gender-male" class="btn btn-default">
+                                    <input type="checkbox" name="gender" id="gender-male" autocomplete="off">Male
+                                </label>
+                            </div>              
                         </div>
 
                         </fieldset>
@@ -200,6 +206,10 @@
             // Checkbox stuff
             //------------------------------------------------------------------------
             d3.selectAll("input[type=checkbox]").on("change", function(d) {
+                // Toggle .active attribute
+                var parentNode = d3.select(this.parentNode);
+                parentNode.classed("active", !parentNode.classed("active"));
+
                 // Collect filters
                 var filterFemale = document.getElementById("gender-female").checked;
                 var filterMale = document.getElementById("gender-male").checked;
