@@ -15,6 +15,12 @@
         <div class="container">
             <div id="main" class="row">
                 <div id="svgContainer" class="col-xs-8">
+                    <div id="hillaryLegendLabels">
+                        <span class="legendLabel label2017">2017</span>
+                        <span class="legendLabel label2019">2019</span>
+                        <span class="legendLabel label2021">2021</span>
+                    </div>
+
                 	<div id="controls">
                         <h2 class="title">Senatorial stances on Hillary for President</h2>
                         <form class="form-horizontal">
@@ -101,15 +107,15 @@
             //------------------------------------------------------------------------
         	var margin = {top: 20, right: 10, bottom: 20, left: 30},
         		width = 1170 - margin.left - margin.right,
-        		height = 700 - margin.top - margin.bottom,
-        		center = { x: 450, y: 290 },
+        		height = 720 - margin.top - margin.bottom,
+        		center = { x: 455, y: 295 },
         		radius = { maximum: 350, rings: [150, 190, 230] },
                 arcWidth = 0.2,
                 arcMargin = 40,
         		rBigNode = 50,
         		rSmallNode = 10,
         		rImage = rBigNode * 0.75,
-                originNonEndorsing = { x: 30, y: 550 },
+                originNonEndorsing = { x: 23, y: 570 },
                 nonEndorsingStride = 36.0,
                 nRows = 4;     // Number of rows
 
@@ -146,26 +152,11 @@
             var defsMain = svg.append("defs");
             var defsSenatorPortrait = d3.select("#senatorPortrait").append("defs");
 
-            // No known endorsement labels
-            svg.append("text").text("No known endorsement:")
-                .style("font-weight", "bold")
-                .attr("x", originNonEndorsing.x - 11)
-                .attr("y", originNonEndorsing.y + 7);
-
-            var nneLabels = svg.append("g")
-                .attr("transform", "translate(" + (originNonEndorsing.x - 50) + " ," + originNonEndorsing.y + ")");
-
-            reElectionYears.forEach(function(year, i) {
-                nneLabels.append("text").text(year)
-                    .attr("class", "small")
-                    .attr("x", 0)
-                    .attr("y", 7 + (i + 1) * nonEndorsingStride);
-            });
-
         	// Hillary Node
             //------------------------------------------------------------------------
         	var hillary = svg.append("g")
         		.attr("class", "hillary")
+                .attr("id", "hillary")
         		.attr("transform", "translate(" + center.x + "," + center.y + ")");
 
         	var endorsingNodes = hillary.append("g")
@@ -181,6 +172,38 @@
 
         	addPortraitImage(defsMain, "portrait_Hillary", imgURL_Hillary);
             hillaryInnerCircle.style("fill", "url(#portrait_Hillary)");
+
+            // Hillary Legend & No known endorsement legends
+            //------------------------------------------------------------------------
+            svg.append("filter")
+                .attr("id", "grayscale")
+              .append("feColorMatrix")
+                .attr("type", "saturate")
+                .attr("values", 0); 
+
+            var scale = 0.3;
+            var hillaryLegend = svg.append("use")
+                .attr("class", "hillaryLegend")
+                .attr("xlink:href", "#hillary")
+                .attr("x", -60 / scale )
+                .attr("y", 360 / scale )
+                .attr("transform", "scale(" + scale + ")")
+                .attr("filter", "url(#grayscale)"); 
+
+            svg.append("text").text("No known endorsement:")
+                .attr("font-weight", "bold")
+                .attr("x", originNonEndorsing.x - 11)
+                .attr("y", originNonEndorsing.y + 7);
+
+            var nneLabels = svg.append("g")
+                .attr("transform", "translate(" + (originNonEndorsing.x - 50) + " ," + originNonEndorsing.y + ")");
+
+            reElectionYears.forEach(function(year, i) {
+                nneLabels.append("text").text(year)
+                    .attr("class", "legendLabel")
+                    .attr("x", 0)
+                    .attr("y", 7 + (i + 1) * nonEndorsingStride);
+            });
 
         	// Load senator data
             //------------------------------------------------------------------------

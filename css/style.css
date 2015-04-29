@@ -39,6 +39,40 @@
 	fill: #fefefe;
 }
 
+/* HILLARY LEGEND */
+.hillaryLegend {
+	opacity: 0.25;
+}
+#hillaryLegendLabels {
+	position: absolute;
+	width: 150px;
+	height: 150px;
+	top: 400px;
+	left: 50px;
+	z-index: 100;
+}
+#hillaryLegendLabels span { 
+	position: absolute;
+}
+#hillaryLegendLabels .label2017 {
+	top: 18px;
+	left: 116px;
+}
+#hillaryLegendLabels .label2019 {
+	top: 80px;
+	left: -23px;
+}
+#hillaryLegendLabels .label2021 {
+	top: 105px;
+	left: 138px;
+}
+.legendLabel {
+	font-weight: bold;
+	color: #bbb;
+	fill: #bbb;
+	font-size: 80%;
+}
+
 /* MAP */
 .land {
   fill: #aaa;
