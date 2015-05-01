@@ -233,6 +233,15 @@
                     d3.select(".state.filtered").classed("filtered", false);
                     d3.select(this).classed("filtered", true);
                     d3.select("#clearMap").attr("disabled", null);
+
+                    // Deselect selected senator, if any
+                    d3.select(".senator.selected").classed("selected", false); 
+                    d3.select(".state.selected").classed("selected", false); 
+                    selectedSenator == null;
+                    d3.select("#info").classed("hidden", true);
+
+
+
                     update(senators.filter(function(d) { return d.stateAbbreviation == state; }), true);
                 });
 			});
