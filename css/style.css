@@ -99,6 +99,11 @@
 .state.filtered {
 	fill: #aaa !important;
 }
+.annotation {
+	color: #FF6347;
+	font-size: 10px;
+}
+
 
 /* HTML LAYOUT */
 
