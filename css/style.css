@@ -74,6 +74,10 @@
 }
 
 /* MAP */
+.annotation {
+	color: #FF6347;
+	font-size: 10px;
+}
 .land {
   fill: #aaa;
 }
@@ -98,10 +102,6 @@
 }
 .state.filtered {
 	fill: #aaa !important;
-}
-.annotation {
-	color: #FF6347;
-	font-size: 10px;
 }
 
 
