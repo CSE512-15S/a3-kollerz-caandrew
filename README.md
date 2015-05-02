@@ -9,9 +9,9 @@ kollerz-caandrew
 ## Project Name: Senatorial Stances on Hillary for President
 
 
-Since the key element in our data domain is the relationship of various senators to Hillary Clinton we have chosen to the node-link technique which is commonly used for network analysis. 
+Our data domain consists of information about current U.S. Senators including their endorsement for Hillary CLinton, their re-election year, party affilliation as well as some personal information like education history and birthdate. The key element we plan to focus on is the relationship of various senators to Hillary Clinton. 
 
-The foundation of our visualization will be a network map that illustrates which senators have/have not endorsed hillary Hillary Clinton for President. It will serve as an tool that allows users to explore senatorial relationships to Hillary as well as the information about the senators themselves. 
+The foundation of our visualization will be a network map that illustrates senatorial support for Hillary Clinton for President. It will serve as an tool that allows users to explore senatorial relationships to Hillary and information about individual senators. 
 
 Our motivating questions are: 
 
@@ -22,7 +22,6 @@ Who is up for re-election during the next Presidentail term?
 Who are these senators? What can we learn about them?
 
 By implementing a series of filters, we will allow our users to explore these questions with ease.
-
 
 ## Running Instructions
 
@@ -41,8 +40,8 @@ Put either your storyboard content or a [link to your storyboard pdf file](story
 
 ### Changes between Storyboard and the Final Implementation
 
-Our initial storyboard lacked a productive way to include senators who had no known endorsment for Hillary. In our final implementation, we
-decided to separate this group from the main network map. We also added a reverse lookup by state of representaion.’
+Our initial storyboard lacked a productive way to show senators who had no known endorsment for Hillary. In our final implementation, we
+decided to separate this sub-group from the main network map. We also added a reverse lookup by state of representaion.’
 
 
 ## Development Process
