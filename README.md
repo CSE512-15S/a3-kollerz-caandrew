@@ -6,17 +6,29 @@ kollerz-caandrew
 1. Zeno Koller kollerz@ethz.ch
 2. Cynthia Andrews thecynthiaandrews@gmail.com
 
-## Project Name
+## Project Name: Senatorial Stances on Hillary for President
 
-This is an example repository for your assignment 3 submission. 
-(Put your a brief description of your final interactive visualization application and your dataset here.)
+
+Since the key element in our data domain is the relationship of various senators to Hillary Clinton we have chosen to the node-link technique which is commonly used for network analysis. 
+
+The foundation of our visualization will be a network map that illustrates which senators have/have not endorsed hillary Hillary Clinton for President. It will serve as an tool that allows users to explore senatorial relationships to Hillary as well as the information about the senators themselves. 
+
+Our motivating questions are: 
+
+What are the effects of party affiliation on senatorial endorsement?
+What are the effects of gender?
+Does whether or not senators served on the senate while Bill Clinton was president have an effect?
+Who is up for re-election during the next Presidentail term?
+Who are these senators? What can we learn about them?
+
+By implementing a series of filters, we will allow our users to explore these questions with ease.
 
 
 ## Running Instructions
 
 Put your running instructions here. (Tell us how to run your visualization.) 
 
-If your visualization is web-based,  it would be great if your submission can be opened online. [Github Pages](http://pages.github.com/) is a good and easy way to put your visualization online so you can put your link here.  For example:
+If your visualization is web-based,  it would be great if your submission can be opened online. [Github Pages](http://pages.github.com/) is a good and easy way to put your visualization online so you can put your linfile:///Users/cynthiaandrews/Documents/School/sp15/data_viz/a_3/a3-kollerz-caandrew/index.htmlk here.  For example:
 
 Access our visualization at http://cse512-15s.github.io/a3-jheer-domoritz-jasnyder/ or download this repository and run `python -m SimpleHTTPServer 9000` and access this from http://localhost:9000/.
 
@@ -29,7 +41,8 @@ Put either your storyboard content or a [link to your storyboard pdf file](story
 
 ### Changes between Storyboard and the Final Implementation
 
-A paragraph explaining changes between the storyboard and the final implementation.
+Our initial storyboard lacked a productive way to include senators who had no known endorsment for Hillary. In our final implementation, we
+decided to separate this group from the main network map. We also added a reverse lookup by state of representaion.’
 
 
 ## Development Process
