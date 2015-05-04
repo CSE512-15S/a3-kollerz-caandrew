@@ -124,7 +124,7 @@ body {
 }
 #controls .title {
 	white-space: nowrap;
-	margin-bottom: 20px;
+	margin-bottom: 10px;
 }
 #controls .form-group {
 	margin-left: 0px;
@@ -168,6 +168,10 @@ input#clearMap {
 
 .container {
 	width:1170px !important;
+}
+#controls .blurb {
+	width: 400px;
+	margin-bottom: 20px;
 }
 #controls .checkbox {
 	margin-left: 25px;

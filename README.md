@@ -3,39 +3,41 @@ kollerz-caandrew
 
 ## Team Members
 
-1. Zeno Koller kollerz@ethz.ch
-2. Cynthia Andrews thecynthiaandrews@gmail.com
+1. [Zeno Koller](kollerz@ethz.ch)
+2. [Cynthia Andrews](thecynthiaandrews@gmail.com)
 
-## Project Name
+## Project Name: Senatorial Stances on Hillary for President
 
-This is an example repository for your assignment 3 submission. 
-(Put your a brief description of your final interactive visualization application and your dataset here.)
+Our domain consists of information about current U.S. Senators including whether or not they have endorsed Hillary Clinton for President, re-election year, party affilliation as well as some personal information like education history and birthdate. 
 
+The foundation of our visualization will be a network map that illustrates infomation about senators who have Hillary Clinton for President. It will serve as a tool that allows users to explore senatorial relationships to the Hillary Clinton campaign and information about individual senators. 
+
+Our motivating questions are: 
+
+* What are the effects of party affiliation on senatorial endorsement?
+* What are the effects of gender?
+* Does whether or not senators served on the senate while Bill Clinton was  president have an effect?
+* Who is up for re-election during the next Presidental term?
+* Who are these senators? What can we learn about them?
+
+By implementing a series of filters, we will allow our users to explore these questions with ease.
 
 ## Running Instructions
 
-Put your running instructions here. (Tell us how to run your visualization.) 
-
-If your visualization is web-based,  it would be great if your submission can be opened online. [Github Pages](http://pages.github.com/) is a good and easy way to put your visualization online so you can put your link here.  For example:
-
-Access our visualization at http://cse512-15s.github.io/a3-jheer-domoritz-jasnyder/ or download this repository and run `python -m SimpleHTTPServer 9000` and access this from http://localhost:9000/.
-
-If you put your work online, please also write a [one-line description and add a link to your final work](http://note.io/1n3u46s) so people can access it directly from the CSE512-15S page.
+Access our visualization [here](http://cse512-15s.github.io/a3-kollerz-caandrew).
 
 ## Story Board
 
-Put either your storyboard content or a [link to your storyboard pdf file](storyboard.pdf?raw=true) here. Just like A2, you can use any software to create a *reasonable* pdf storyboard.
+You can access our development storyboard [here](https://docs.google.com/document/d/1hcvH2zJa1xbvtXZYlpFX8fuzdI9x3R9LGkssbgKAcZk/edit?usp=sharing).
 
 
 ### Changes between Storyboard and the Final Implementation
 
-A paragraph explaining changes between the storyboard and the final implementation.
-
+1.  We decided to encode senators using color, choosing red/blue for democrats/republicans since those colors are culturally accepted as representing their corresponding party affiliation. 
+2.  We expanded our data to include senators who had no known endorsement for Hillary. 
+3.  We added a map legend to allow for reverse identification of senators by the state they serve. 
+4.  A short blurb explaining the purpose of the visualization
 
 ## Development Process
 
-Include:
-- Breakdown of how the work was split among the group members. 
-- A commentary on the development process, including answers to the following questions: 
-  - Roughly how much time did you spend developing your application?
-  - What aspects took the most time?
+We met a total of three times. The first meeting was for three hours, the second was for two and a half hours and the third was for one hour. We worked together on the design, Cynthia found and cleaned the data and translated it from csv to json, Zeno took the lead on writing the code and Cynthia built the storyboard. Individually, Zeno spent roughly six hours working on this assignment outside of our meetings and Cynthia spent about eight hours outside of meetings.
