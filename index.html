@@ -23,6 +23,11 @@
 
                 	<div id="controls">
                         <h2 class="title">Senatorial Stances on Hillary for President</h2>
+
+                        <p>
+                            <!-- Add blurb here -->
+                        </p>
+
                         <form class="form-horizontal">
                         <fieldset>
 
@@ -69,10 +74,11 @@
                 </div>
                 <div id="detailView" class="col-xs-4">
                     <div class="mapContainer">
-                        <div id="map"><text class = "annotation">Select any state to highlight which senators reside there</text></div>
+                        <div id="map"></div>
                         <div>
                             <input class="btn btn-default" type="button" id="clearMap" value="show all states" disabled />
                         </div>
+                        <div class="annotation">Select any state to highlight which senators reside there<br/>Click the above button to clear</div>
                     </div>
 
                     <hr>
@@ -233,6 +239,15 @@
                     d3.select(".state.filtered").classed("filtered", false);
                     d3.select(this).classed("filtered", true);
                     d3.select("#clearMap").attr("disabled", null);
+
+                    // Deselect selected senator, if any
+                    d3.select(".senator.selected").classed("selected", false); 
+                    d3.select(".state.selected").classed("selected", false); 
+                    selectedSenator == null;
+                    d3.select("#info").classed("hidden", true);
+
+
+
                     update(senators.filter(function(d) { return d.stateAbbreviation == state; }), true);
                 });
 			});
