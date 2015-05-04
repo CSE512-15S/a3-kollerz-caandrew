@@ -9,7 +9,7 @@ kollerz-caandrew
 ## Project Name: Senatorial Stances on Hillary for President
 
 
-Our data domain consists of information about current U.S. Senators including their endorsement for Hillary CLinton, their re-election year, party affilliation as well as some personal information like education history and birthdate. The key element we plan to focus on is the relationship of various senators to Hillary Clinton. 
+Our data domain consists of information about current U.S. Senators including their endorsement for Hillary Clinton, their re-election year, party affilliation as well as some personal information like education history and birthdate. The key element we plan to focus on is the relationship of various senators to Hillary Clinton. 
 
 The foundation of our visualization will be a network map that illustrates senatorial support for Hillary Clinton for President. It will serve as an tool that allows users to explore senatorial relationships to Hillary and information about individual senators. 
 
@@ -18,7 +18,7 @@ Our motivating questions are:
 What are the effects of party affiliation on senatorial endorsement?
 What are the effects of gender?
 Does whether or not senators served on the senate while Bill Clinton was president have an effect?
-Who is up for re-election during the next Presidentail term?
+Who is up for re-election during the next Presidental term?
 Who are these senators? What can we learn about them?
 
 By implementing a series of filters, we will allow our users to explore these questions with ease.
